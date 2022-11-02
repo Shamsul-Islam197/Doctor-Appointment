@@ -1,3 +1,11 @@
+<?php
+	include 'connection.php';
+	$query = "SELECT * FROM department";
+	$result = mysqli_query($con,$query);
+	
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -68,50 +76,25 @@
     <div class=card_container>
     <div class="cards-list">
 
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <?php
+      if(mysqli_num_rows($result) > 0) {
+          while ($row = mysqli_fetch_array($result)) {
+    ?>
+
+    <div class="card">
+    <div class="card_image">
+    <?php echo '<img src="data:image;base64,'.base64_encode($row['img']).'" >';?>
+    </div>
     <div class="card_title title-white">
-    <p>Card Title</p>
+    <p><?php echo $row['dept_name']; ?></p>
     </div>
     </div>
 
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
-    <div class="card_title title-white">
-    <p>Card Title</p>
-    </div>
-    </div>
+    <?php
+         }
+      }
+        ?>
 
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
-    <div class="card_title title-white">
-    <p>Card Title</p>
-    </div>
-    </div>
-
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
-    <div class="card_title title-white">
-    <p>Card Title</p>
-    </div>
-    </div>
-
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
-    <div class="card_title title-white">
-    <p>Card Title</p>
-    </div>
-    </div>
-
-    <div class="card 1">
-    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
-    <div class="card_title title-white">
-    <p>Card Title</p>
-    </div>
-    </div>
-
-    </div>	
-    </div>
 
     </div>
     </div>
@@ -137,4 +120,5 @@
   sidebarBtn.addEventListener("click", ()=>{
     sidebar.classList.toggle("close");
   });
+
   </script>
