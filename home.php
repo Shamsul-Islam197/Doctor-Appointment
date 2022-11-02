@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="home.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
@@ -57,12 +58,71 @@
   </li>
 </ul>
   </div>
+
   <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu' ></i>
       <span class="text">Doctor Appointment</span>
     </div>
+
+    <div class=card_container>
+    <div class="cards-list">
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    <div class="card 1">
+    <div class="card_image"> <img src="https://i.redd.it/b3esnz5ra34y.jpg" /> </div>
+    <div class="card_title title-white">
+    <p>Card Title</p>
+    </div>
+    </div>
+
+    </div>	
+    </div>
+
+    </div>
+    </div>
   </section>
+  
+</body>
+</html>
+
+
+
+
   <script>
   let arrow = document.querySelectorAll(".arrow");
   for (var i = 0; i < arrow.length; i++) {
@@ -78,5 +138,3 @@
     sidebar.classList.toggle("close");
   });
   </script>
-</body>
-</html>
