@@ -1,7 +1,17 @@
 <?php
 	include 'connection.php';
-	$query = "SELECT * FROM department where branch_id like '%1%' ";
-	$result = mysqli_query($con,$query);
+  $view = 0;
+
+  $query = "SELECT * FROM department where branch_id like '%1%' ";
+  $result = mysqli_query($con,$query);
+
+    if(isset($_GET['department'])){
+        $dept = $_GET['department'];
+        $query = "SELECT * FROM `doctor_info` where department='".$dept."'";
+        $result2 = mysqli_query($con,$query);
+        $view = 1;
+      }
+      
 	
 ?>
 <!DOCTYPE html>
@@ -29,24 +39,27 @@ $.get("nav.php", function(data){
 <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu' ></i>
-      <span class="text">Doctor Appointment</span>
+      <span class="text">Main Branch</span>
     </div>
-<div class=card_container>
+    
+    <div class="card_container" id="dept_list">
     <div class="cards-list">
 
     <?php
       if(mysqli_num_rows($result) > 0) {
           while ($row = mysqli_fetch_array($result)) {
     ?>
-
-    <div class="card">
+    <a href="unit1.php?department=<?php echo $row['dept_name'] ?>">
+    <div class="card" id="show_doc">
     <div class="card_image">
     <?php echo '<img src="data:image;base64,'.base64_encode($row['img']).'" >';?>
     </div>
     <div class="card_title title-white">
     <p><?php echo $row['dept_name']; ?></p>
     </div>
+    
     </div>
+    </a>
 
     <?php
          }
@@ -54,6 +67,46 @@ $.get("nav.php", function(data){
         ?>
     </div>
     </div>
+
+
+    <div class="card_container" id="dept_doctor">
+    <div class="cards-list">
+
+    <?php
+    if($view==1){
+      if(mysqli_num_rows($result2) > 0) {
+          while ($row = mysqli_fetch_array($result2)) {
+    ?>
+    <div class="card">
+    <div class="card_image">
+    <?php echo '<img src="data:image;base64,'.base64_encode($row['img']).'" >';?>
+    </div>
+    <div class="card_title_doctor title-white">
+    <p><?php echo $row['name']; ?></p>
+    </div>
+    
+    </div>
+    </a>
+
+    <?php
+         }
+      }
+    }
+        ?>
+    </div>
+    </div>
+
     </section>
 </body>
 </html>
+
+<script>
+if(('<?php echo $view;?>')==0){
+      document.getElementById("dept_list").style.display = "block";
+      document.getElementById("dept_doctor").style.display = "none";
+    
+    }else{
+        document.getElementById("dept_doctor").style.display = "block";
+        document.getElementById("dept_list").style.display = "none";
+    }
+</script>

@@ -29,7 +29,7 @@ $.get("nav.php", function(data){
 <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu' ></i>
-      <span class="text">Doctor Appointment</span>
+      <span class="text">Unit-04</span>
     </div>
 <div class=card_container>
     <div class="cards-list">

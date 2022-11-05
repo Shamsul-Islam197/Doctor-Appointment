@@ -75,7 +75,7 @@ $(document).ready(function() {
 					var dataResult = JSON.parse(dataResult);
 					if(dataResult.statusCode==200){
             alert('Successfully logged in !');
-            location.href = "home.php";						
+            location.href = "index.php";						
 					}
 					else if(dataResult.statusCode==201){
 						$("#error").show();
