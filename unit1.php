@@ -1,7 +1,6 @@
 <?php
 	include 'connection.php';
   $view = 0;
-
   $query = "SELECT * FROM department where branch_id like '%1%' ";
   $result = mysqli_query($con,$query);
 
@@ -11,8 +10,6 @@
         $result2 = mysqli_query($con,$query);
         $view = 1;
       }
-      
-	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,10 +18,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    
-
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <title>Unit 01</title>
 </head>
@@ -79,7 +76,7 @@ $.get("nav.php", function(data){
       if(mysqli_num_rows($result2) > 0) {
           while ($row = mysqli_fetch_array($result2)) {
     ?>
-    <div class="card" id="myBtn">
+    <div class="card" data-toggle="modal" data-target="#myModal<?php echo $row['id'] ?>">
     <div class="card_image">
     <?php echo '<img src="data:image;base64,'.base64_encode($row['img']).'" >';?>
     </div>
@@ -89,24 +86,24 @@ $.get("nav.php", function(data){
 
     </div>
     </a>
-    <div id="myModal" class="modal">
-<div class="modal-content">
-  <span class="close">&times;</span>
-  <p><?php echo "Name: ".$row['name']; ?></p>
-  <hr>
-  <p><?php echo "Department: ".$row['department']; ?></p>
-  <hr>
-  <p><?php echo "Designation: ".$row['designation']; ?></p>
-  <hr>
-  <p><?php echo "Degree: ".$row['degree']; ?></p>
-  <hr>
-  <p><?php echo "Institute: ".$row['institute']; ?></p>
-  <hr>
-  <p><?php echo "Schedule: ".$row['chamber_day'].", ".$row['chamber_time']; ?></p>
-  <hr>
-  <p><?php echo "Visit: ".$row['first_visit'].", ".$row['second_visit'].", ".$row['report']; ?></p>
-</div>
-</div>
+
+    <div id="myModal<?php echo $row['id'] ?>" class="modal">
+			<div class="modal-dialog">
+			    <div class="modal-content">
+						 <button type="button" class="close" data-dismiss="modal">&times;</button>
+				    <div class="modal-body">
+						 <p>Name : <?php echo $row['name']; ?></p><hr>
+						 <p>Designation : <?php echo $row['designation']; ?></p><hr>
+             <p>Degree : <?php echo $row['degree']; ?></p><hr>
+             <p>Institute : <?php echo $row['institute']; ?></p><hr>
+             <p>Schedule : <?php echo $row['chamber_day']." , ".$row['chamber_time']; ?></p><hr>
+             <p>Visit : <?php echo $row['first_visit'].", ".$row['second_visit'].", ".$row['report']; ?></p>
+             <button type="button" class="apnt_btn">Book Appointment</button>
+
+				    </div>
+				</div>
+			</div>
+		</div>
 
 
     <?php
