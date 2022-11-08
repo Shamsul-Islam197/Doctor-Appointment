@@ -23,7 +23,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <script src="//code.jquery.com/jquery.min.js"></script>
+    
+
+    
     <title>Unit 01</title>
 </head>
 <body>
@@ -70,23 +72,42 @@ $.get("nav.php", function(data){
 
 
     <div class="card_container" id="dept_doctor">
-    <div class="cards-list">
+    <div class="cards-list" >
 
     <?php
     if($view==1){
       if(mysqli_num_rows($result2) > 0) {
           while ($row = mysqli_fetch_array($result2)) {
     ?>
-    <div class="card">
+    <div class="card" id="myBtn">
     <div class="card_image">
     <?php echo '<img src="data:image;base64,'.base64_encode($row['img']).'" >';?>
     </div>
     <div class="card_title_doctor title-white">
     <p><?php echo $row['name']; ?></p>
     </div>
-    
+
     </div>
     </a>
+    <div id="myModal" class="modal">
+<div class="modal-content">
+  <span class="close">&times;</span>
+  <p><?php echo "Name: ".$row['name']; ?></p>
+  <hr>
+  <p><?php echo "Department: ".$row['department']; ?></p>
+  <hr>
+  <p><?php echo "Designation: ".$row['designation']; ?></p>
+  <hr>
+  <p><?php echo "Degree: ".$row['degree']; ?></p>
+  <hr>
+  <p><?php echo "Institute: ".$row['institute']; ?></p>
+  <hr>
+  <p><?php echo "Schedule: ".$row['chamber_day'].", ".$row['chamber_time']; ?></p>
+  <hr>
+  <p><?php echo "Visit: ".$row['first_visit'].", ".$row['second_visit'].", ".$row['report']; ?></p>
+</div>
+</div>
+
 
     <?php
          }
@@ -95,6 +116,10 @@ $.get("nav.php", function(data){
         ?>
     </div>
     </div>
+
+ 
+
+
 
     </section>
 </body>
@@ -109,4 +134,25 @@ if(('<?php echo $view;?>')==0){
         document.getElementById("dept_doctor").style.display = "block";
         document.getElementById("dept_list").style.display = "none";
     }
+
+
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("myBtn");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+
 </script>
