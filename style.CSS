@@ -391,4 +391,20 @@ a {
   border-radius: 5px;
   padding: 5px;
 }
+
+/* Appointment Form */
+.slot{
+  width: 60px;
+  height: 500px;
+  margin-left: 10px;
+  overflow-y: scroll;
+}
+.slot_btn{
+  background-color: aquamarine;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px auto;
+  border-radius: 5px;
+}
     

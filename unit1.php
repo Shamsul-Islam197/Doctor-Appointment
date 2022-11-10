@@ -22,18 +22,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
     
     <title>Unit 01</title>
 </head>
 <body>
-<div id="nav-placeholder">
 
+<div id="nav-placeholder">
 </div>
-<script>
-$.get("nav.php", function(data){
-    $("#nav-placeholder").replaceWith(data);
-});
-</script>
 
 <section class="home-section">
     <div class="home-content">
@@ -98,7 +94,7 @@ $.get("nav.php", function(data){
              <p>Institute : <?php echo $row['institute']; ?></p><hr>
              <p>Schedule : <?php echo $row['chamber_day']." , ".$row['chamber_time']; ?></p><hr>
              <p>Visit : <?php echo $row['first_visit'].", ".$row['second_visit'].", ".$row['report']; ?></p>
-             <button type="button" class="apnt_btn">Book Appointment</button>
+             <a class="apnt_btn" href="appointment.php?doc_id=<?php echo $row['id'] ?>">Book Appointment</a>
 
 				    </div>
 				</div>
@@ -114,10 +110,6 @@ $.get("nav.php", function(data){
     </div>
     </div>
 
- 
-
-
-
     </section>
 </body>
 </html>
@@ -132,24 +124,7 @@ if(('<?php echo $view;?>')==0){
         document.getElementById("dept_list").style.display = "none";
     }
 
-
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("myBtn");
-var span = document.getElementsByClassName("close")[0];
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-
-
+    $.get("nav.php", function(data){
+    $("#nav-placeholder").replaceWith(data);
+    });
 </script>
