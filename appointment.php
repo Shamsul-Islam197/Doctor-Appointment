@@ -16,6 +16,7 @@ if(isset($_GET['doc_id'])){
     <link rel="stylesheet" href="style.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Appointment</title>
 </head>
 <body>
@@ -27,16 +28,19 @@ if(isset($_GET['doc_id'])){
       <span class="text">Unit-02</span>
     </div>
 
-    
-<div class="slot">
+<form id="slotForm" method="post">
+  
+
+<div class="slot" >
 <?php
       if(mysqli_num_rows($result) > 0) {
           while ($row = mysqli_fetch_array($result)) {
             for($i=1;$i<=$row['slot'];$i++){
                 ?>
       <div class="slot_btn">
-      <input type="checkbox" id="slot" name="slot" value="<?php echo $i;?>">
+      <input type="checkbox" id="slot_select" name="slot" value="<?php echo $i;?>">
       <label for="slot"><?php echo $i;?></label><br>
+      <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id?>" />
       </div>
       <?php
             }
@@ -44,6 +48,7 @@ if(isset($_GET['doc_id'])){
         }
 ?>
     </div>
+</form>    
   
 </section>
    
@@ -57,18 +62,39 @@ if(isset($_GET['doc_id'])){
     });
 
     $("input:checkbox").on('click', function() {
-  // in the handler, 'this' refers to the box clicked on
   var $box = $(this);
   if ($box.is(":checked")) {
-    // the name of the box is retrieved using the .attr() method
-    // as it is assumed and expected to be immutable
     var group = "input:checkbox[name='" + $box.attr("name") + "']";
-    // the checked state of the group/box on the other hand will change
-    // and the current value is retrieved using .prop() method
     $(group).prop("checked", false);
     $box.prop("checked", true);
   } else {
     $box.prop("checked", false);
   }
+});
+
+
+$(document).ready(function(){
+    $("#slotForm").on("change", "input:checkbox", function(){
+      var slot = $('#slot_select').val();
+		var doc_id = $('#doc_id').val();
+			$.ajax({
+				url: "slot.php",
+				type: "POST",
+				data: {
+					slot: slot,
+					doc_id: doc_id						
+				},
+				cache: false,
+				success: function(dataResult){
+					var dataResult = JSON.parse(dataResult);
+					if(dataResult.statusCode==200){
+            alert('Slot '+slot+' selected');						
+					}
+					else if(dataResult.statusCode==201){
+						$('#error').html('Slot is booked !');
+					}
+        }
+			});
+    });
 });
 </script>
