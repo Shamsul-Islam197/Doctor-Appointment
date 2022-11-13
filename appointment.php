@@ -38,7 +38,7 @@ if(isset($_GET['doc_id'])){
             for($i=1;$i<=$row['slot'];$i++){
                 ?>
       <div class="slot_btn">
-      <input type="checkbox" id="slot_select" name="slot" value="<?php echo $i;?>">
+      <input type="checkbox" name="slot" value="<?php echo $i;?>">
       <label for="slot"><?php echo $i;?></label><br>
       <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id?>" />
       </div>
@@ -47,6 +47,7 @@ if(isset($_GET['doc_id'])){
           }
         }
 ?>
+
     </div>
 </form>    
   
@@ -75,7 +76,7 @@ if(isset($_GET['doc_id'])){
 
 $(document).ready(function(){
     $("#slotForm").on("change", "input:checkbox", function(){
-      var slot = $('#slot_select').val();
+      var slot = $(this).val();
 		var doc_id = $('#doc_id').val();
 			$.ajax({
 				url: "slot.php",
