@@ -462,8 +462,26 @@ a {
   overflow-y: scroll;
 }
 
-.slot_btn {
-  background-color: aquamarine;
+.selected {
+  background-color: rgb(127, 255, 244);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+.booked {
+  background-color: rgb(255, 255, 148);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+.empty {
+  background-color: rgb(178, 255, 148);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

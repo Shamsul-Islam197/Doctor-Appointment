@@ -2,7 +2,7 @@
 
 if (isset($_GET['doc_id'])) {
   $doc_id = $_GET['doc_id'];
-  $query = "SELECT * FROM `doctor_info` where id='" . $doc_id . "'";
+  $query = "SELECT * FROM `doctor_info` where id='$doc_id'";
   $result = mysqli_query($con, $query);
 }
 ?>
@@ -30,7 +30,7 @@ if (isset($_GET['doc_id'])) {
   <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu'></i>
-      <span class="text">Unit-02</span>
+      <span class="text">Appointment Book</span>
     </div>
 
     <div class="apnt_sec">
@@ -41,13 +41,17 @@ if (isset($_GET['doc_id'])) {
           if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_array($result)) {
               for ($i = 1; $i <= $row['slot']; $i++) {
+                $query2 = "SELECT * FROM `appointment_info` where slot='$i'";
+                $result2 = mysqli_query($con, $query2);
+                while ($row2 = mysqli_fetch_array($result2)) {
           ?>
-                <div class="slot_btn">
-                  <input type="checkbox" name="slot" value="<?php echo $i; ?>">
-                  <label for="slot"><?php echo $i; ?></label><br>
-                  <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
-                </div>
+                  <div class="<?php echo $row2['slot_status']; ?>">
+                    <input type="checkbox" name="slot" value="<?php echo $i; ?>">
+                    <label for="slot"><?php echo $i; ?></label><br>
+                    <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
+                  </div>
           <?php
+                }
               }
             }
           }
@@ -109,6 +113,7 @@ if (isset($_GET['doc_id'])) {
             $("#success").hide();
             $("#error").show();
             $('#error').html('Slot ' + slot + ' is booked !');
+            $box.prop("checked", false);
           }
         }
       });
