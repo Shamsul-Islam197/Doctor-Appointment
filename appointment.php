@@ -41,11 +41,29 @@ if (isset($_GET['doc_id'])) {
           if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_array($result)) {
               for ($i = 1; $i <= $row['slot']; $i++) {
-                $query2 = "SELECT * FROM `appointment_info` where slot='$i'";
+                $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='selected'";
+                $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='booked'";
                 $result2 = mysqli_query($con, $query2);
-                while ($row2 = mysqli_fetch_array($result2)) {
+                $result3 = mysqli_query($con, $query3);
+                if (mysqli_num_rows($result2) > 0) {
+
           ?>
-                  <div class="<?php echo $row2['slot_status']; ?>">
+                  <div class="selected">
+                    <input type="checkbox" name="slot" value="<?php echo $i; ?>">
+                    <label for="slot"><?php echo $i; ?></label><br>
+                    <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
+                  </div>
+                <?php
+                } else if (mysqli_num_rows($result3) > 0) {
+                ?>
+                  <div class="booked">
+                    <input type="checkbox" name="slot" value="<?php echo $i; ?>">
+                    <label for="slot"><?php echo $i; ?></label><br>
+                    <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
+                  </div>
+                <?php
+                } else { ?>
+                  <div class="empty">
                     <input type="checkbox" name="slot" value="<?php echo $i; ?>">
                     <label for="slot"><?php echo $i; ?></label><br>
                     <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
@@ -112,7 +130,7 @@ if (isset($_GET['doc_id'])) {
           } else if (dataResult.statusCode == 201) {
             $("#success").hide();
             $("#error").show();
-            $('#error').html('Slot ' + slot + ' is booked !');
+            $('#error').html('Slot ' + slot + ' is not available !');
             $box.prop("checked", false);
           }
         }
