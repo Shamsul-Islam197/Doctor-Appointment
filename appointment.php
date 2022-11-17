@@ -1,4 +1,6 @@
-<?php include 'connection.php';
+<?php
+include 'connection.php';
+include 'log.php';
 
 if (isset($_GET['doc_id'])) {
   $doc_id = $_GET['doc_id'];

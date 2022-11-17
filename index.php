@@ -1,3 +1,6 @@
+<?php
+include 'log.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 

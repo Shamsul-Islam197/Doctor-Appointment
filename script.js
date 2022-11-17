@@ -60,7 +60,8 @@ $(document).ready(function () {
         });
       }
     } else {
-      alert("Please fill all the reqired field !");
+      $("#error").show();
+      $("#error").html("Please fill all the required feild !");
     }
   });
   $("#but_Signin").on("click", function () {
@@ -79,7 +80,6 @@ $(document).ready(function () {
         success: function (dataResult) {
           var dataResult = JSON.parse(dataResult);
           if (dataResult.statusCode == 200) {
-            alert("Successfully logged in !");
             location.href = "index.php";
           } else if (dataResult.statusCode == 201) {
             $("#error").show();
@@ -88,7 +88,8 @@ $(document).ready(function () {
         },
       });
     } else {
-      alert("Please fill all the field !");
+      $("#error").show();
+      $("#error").html("Please fill all the required feild !");
     }
   });
 });

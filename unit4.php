@@ -1,8 +1,8 @@
 <?php
 include 'connection.php';
+include 'log.php';
 $query = "SELECT * FROM department where branch_id like '%4%' ";
 $result = mysqli_query($con, $query);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include 'log.php';
 $view = 0;
 $query = "SELECT * FROM department where branch_id like '%1%' ";
 $result = mysqli_query($con, $query);

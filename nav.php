@@ -1,3 +1,6 @@
+ <?php
+  session_start();
+  ?>
  <div class="sidebar close">
    <div class="logo-details">
      <i class='bx bx-plus-medical'></i>
@@ -38,10 +41,12 @@
            <img src="user.png" alt="profileImg">
          </div>
          <div class="name-job">
-           <div class="profile_name">User</div>
+           <div class="profile_name"><?php echo $_SESSION['username'] ?></div>
            <div class="job">Agent</div>
          </div>
-         <i class='bx bx-log-out'></i>
+         <a href="#" id="logout">
+           <i class='bx bx-log-out'></i>
+         </a>
        </div>
      </li>
    </ul>
@@ -60,5 +65,14 @@
    console.log(sidebarBtn);
    sidebarBtn.addEventListener("click", () => {
      sidebar.classList.toggle("close");
+   });
+
+   $("#logout").click(function() {
+     $.ajax({
+       url: "function.php?logout",
+       success: function() {
+         window.location.href = 'login.php';
+       },
+     });
    });
  </script>
