@@ -1,6 +1,8 @@
  <?php
   session_start();
   ?>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+ <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
  <div class="sidebar close">
    <div class="logo-details">
      <i class='bx bx-plus-medical'></i>
@@ -56,7 +58,7 @@
    let arrow = document.querySelectorAll(".arrow");
    for (var i = 0; i < arrow.length; i++) {
      arrow[i].addEventListener("click", (e) => {
-       let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
+       let arrowParent = e.target.parentElement.parentElement;
        arrowParent.classList.toggle("showMenu");
      });
    }
@@ -68,11 +70,26 @@
    });
 
    $("#logout").click(function() {
-     $.ajax({
-       url: "function.php?logout",
-       success: function() {
-         window.location.href = 'login.php';
+     swal({
+         title: "Are you sure?",
+         text: "",
+         type: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#DD6B55",
+         confirmButtonText: "Yes, log out!",
+         cancelButtonText: "Cancel!",
+         closeOnConfirm: false,
+         closeOnCancel: true
        },
-     });
+       function(isConfirm) {
+         if (isConfirm) {
+           $.ajax({
+             url: "function.php?logout",
+             success: function() {
+               window.location.href = 'login.php';
+             },
+           });
+         }
+       });
    });
  </script>

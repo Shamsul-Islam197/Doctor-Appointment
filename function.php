@@ -37,6 +37,39 @@ if ($_POST['type'] == 2) {
 	mysqli_close($con);
 }
 
+if (($_POST['type'] == "select")) {
+	$slot = $_POST['slot'];
+	$doc_id = $_POST['doc_id'];
+	$date = date("d/m/Y");
+	$query = "select * from appointment_info where slot='$slot' and doc_id='$doc_id' and (slot_status='selected' or slot_status='booked') ";
+	$result = mysqli_query($con, $query);
+	if (mysqli_num_rows($result) > 0) {
+		echo json_encode(array("statusCode" => 201));
+	} else {
+		$query = "INSERT INTO `appointment_info` (slot,doc_id,slot_status,date) Values ('$slot','$doc_id','selected','$date')";
+		$result = mysqli_query($con, $query);
+		echo json_encode(array("statusCode" => 200));
+	}
+}
+
+if (($_POST['type'] == "book")) {
+	$slot = $_POST['slot'];
+	$date = $_POST['date'];
+	$date = date('d/m/Y', strtotime($date));
+	$name = $_POST['name'];
+	$age = $_POST['age'];
+	$phone = $_POST['phone'];
+	$address = $_POST['address'];
+	$doc_id = $_POST['doc_id'];
+	$query = "UPDATE `appointment_info` SET `slot_status` = 'booked' , `date` = '" . $date . "' , `patient_name` = '" . $name . "', `patient_age` = '" . $age . "' , `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE slot= '$slot' AND doc_id= '$doc_id'";
+	if (mysqli_query($con, $query)) {
+		echo json_encode(array("statusCode" => 200));
+	} else {
+		echo json_encode(array("statusCode" => 200));
+	}
+}
+
+
 
 if (isset($_GET["logout"])) {
 	session_unset();
