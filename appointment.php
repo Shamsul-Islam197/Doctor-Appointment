@@ -6,6 +6,9 @@ if (isset($_GET['doc_id'])) {
   $doc_id = $_GET['doc_id'];
   $query = "SELECT * FROM `doctor_info` where id='$doc_id'";
   $result = mysqli_query($con, $query);
+  while ($row = mysqli_fetch_array($result)) {
+    $n = $row['slot'];
+  }
 }
 ?>
 
@@ -20,7 +23,6 @@ if (isset($_GET['doc_id'])) {
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
   <title>Appointment</title>
 </head>
 
@@ -28,76 +30,63 @@ if (isset($_GET['doc_id'])) {
   <div id="nav-placeholder">
   </div>
 
-
   <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu'></i>
       <span class="text">Appointment Book</span>
     </div>
 
-    <div class="apnt_sec">
-
-
-      <div class="slot">
+    <div class="slot-sec">
+      <div id="slot_load">
         <?php
-        if (mysqli_num_rows($result) > 0) {
-          while ($row = mysqli_fetch_array($result)) {
-            for ($i = 1; $i <= $row['slot']; $i++) {
-              $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='selected'";
-              $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='booked'";
-              $result2 = mysqli_query($con, $query2);
-              $result3 = mysqli_query($con, $query3);
-              if (mysqli_num_rows($result2) > 0) {
-
+        for ($i = 1; $i <= $n; $i++) {
+          $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='selected'";
+          $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='booked'";
+          $result2 = mysqli_query($con, $query2);
+          $result3 = mysqli_query($con, $query3);
+          if (mysqli_num_rows($result2) > 0) {
         ?>
-                <div class="selected">
-                  <input type="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
-                  <label for="slot"><?php echo $i; ?></label><br>
-                  <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
-                </div>
-              <?php
-              } else if (mysqli_num_rows($result3) > 0) {
-              ?>
-                <div class="booked">
-                  <input type="checkbox" name="slot" value="<?php echo $i; ?>">
-                  <label for="slot"><?php echo $i; ?></label><br>
-                  <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
-                </div>
-              <?php
-              } else { ?>
-                <div class="empty">
-                  <input type="checkbox" name="slot" value="<?php echo $i; ?>">
-                  <label for="slot"><?php echo $i; ?></label><br>
-                  <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
-                </div>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="selected"><?php echo $i; ?></label></div>
+            </div>
+            <br>
+          <?php
+          } else if (mysqli_num_rows($result3) > 0) {
+          ?>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="booked"><?php echo $i; ?></label></div>
+            </div>
+            <br>
+          <?php
+          } else { ?>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="empty"><?php echo $i; ?></label></div>
+            </div>
+            <br>
         <?php
-              }
-            }
           }
         }
         ?>
       </div>
-
-
-      <div class="apnt_form">
-        <div class="alert_success" id="success"></div>
-        <div class="alert_danger" id="error"></div>
-        <input type="date" class="input" name="date" id="date" placeholder="dd-mm-yyyy">
-        <input type="text" class="input" name="name" id="name" placeholder="Name">
-        <input type="text" class="input" name="age" id="age" placeholder="Age">
-        <input type="text" class="input" name="phone" id="phone" placeholder="Phone">
-        <input type="text" class="input" name="address" id="address" placeholder="Address">
-        <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
-        <input type="button" class="apnt_btn" id="apnt_btn" value="Submit">
-      </div>
-
-
-
     </div>
 
+    <div class="apnt_form">
+      <div class="alert_success" id="success"></div>
+      <div class="alert_danger" id="error"></div>
+      <input type="date" class="input" name="date" id="date" placeholder="dd-mm-yyyy">
+      <input type="text" class="input" name="name" id="name" placeholder="Name">
+      <input type="text" class="input" name="age" id="age" placeholder="Age">
+      <input type="text" class="input" name="phone" id="phone" placeholder="Phone">
+      <input type="text" class="input" name="address" id="address" placeholder="Address">
+      <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
+      <input type="button" class="apnt_btn" id="apnt_btn" value="Submit">
+    </div>
+
+
   </section>
-
-
 </body>
 
 </html>
@@ -109,7 +98,6 @@ if (isset($_GET['doc_id'])) {
 
   $(document).ready(function() {
     var slot_id;
-
     $("input:checkbox").on('click', function() {
       var $box = $(this);
       var slot = $(this).val();
@@ -137,6 +125,7 @@ if (isset($_GET['doc_id'])) {
             } else if (dataResult.statusCode == 201) {
               $("#success").hide();
               $("#error").show();
+              $('#slot_load').load(location.href + ' #slot_load');
               $('#error').html('Slot ' + slot + ' is not available !');
               $box.prop("checked", false);
             }
@@ -181,6 +170,7 @@ if (isset($_GET['doc_id'])) {
               $("#address").val("");
               $("#error").hide();
               $("#success").html("Appointment booked!");
+              $('#slot_load').load(location.href + ' #slot_load');
             } else if (dataResult.statusCode == 201) {
               $("#error").show();
               $("#error").html("Something went wrong !");
@@ -193,7 +183,6 @@ if (isset($_GET['doc_id'])) {
         alert(slot_id);
       }
     });
-
 
   });
 </script>
