@@ -8,7 +8,10 @@ if (isset($_GET['doc_id'])) {
   $result = mysqli_query($con, $query);
   while ($row = mysqli_fetch_array($result)) {
     $n = $row['slot'];
+    $m = $row['report_slot'];
   }
+  $query2 = "DELETE FROM appointment_info WHERE slot_status='selected' and `time` < (NOW() - INTERVAL 01 MINUTE)";
+  mysqli_query($con, $query2);
 }
 ?>
 
@@ -36,12 +39,14 @@ if (isset($_GET['doc_id'])) {
       <span class="text">Appointment Book</span>
     </div>
 
-    <div class="slot-sec">
-      <div id="slot_load">
+    <!-- Slot for New Patient -->
+    <div id="New_patient">
+      <h3>New Patient</h3>
+      <div class="slot-sec">
         <?php
         for ($i = 1; $i <= $n; $i++) {
-          $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='selected'";
-          $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND slot_status='booked'";
+          $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND appointment_type='New Patient' AND slot_status='selected'";
+          $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND appointment_type='New Patient' AND slot_status='booked'";
           $result2 = mysqli_query($con, $query2);
           $result3 = mysqli_query($con, $query3);
           if (mysqli_num_rows($result2) > 0) {
@@ -73,15 +78,61 @@ if (isset($_GET['doc_id'])) {
       </div>
     </div>
 
+    <!-- Slot for Report Check -->
+    <div id="report_check">
+      <h3>Report Check</h3>
+      <div class="report_check">
+        <?php
+        for ($i = 1; $i <= $m; $i++) {
+          $query2 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND appointment_type='Report Check' AND slot_status='selected'";
+          $query3 = "SELECT * FROM `appointment_info` where slot='$i' AND doc_id='$doc_id' AND appointment_type='Report Check' AND slot_status='booked'";
+          $result2 = mysqli_query($con, $query2);
+          $result3 = mysqli_query($con, $query3);
+          if (mysqli_num_rows($result2) > 0) {
+        ?>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="selected"><?php echo $i; ?></label></div>
+            </div>
+            <br>
+          <?php
+          } else if (mysqli_num_rows($result3) > 0) {
+          ?>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="booked"><?php echo $i; ?></label></div>
+            </div>
+            <br>
+          <?php
+          } else { ?>
+            <div class="check-div">
+              <input type="checkbox" class="checkbox" name="slot" id="slot" value="<?php echo $i; ?>">
+              <div><label for="slot" class="empty"><?php echo $i; ?></label></div>
+            </div>
+            <br>
+        <?php
+          }
+        }
+        ?>
+      </div>
+    </div>
+
+
+
     <div class="apnt_form">
       <div class="alert_success" id="success"></div>
       <div class="alert_danger" id="error"></div>
+      <select name="app_type" id="app_type" class="apnt_btn">
+        <option value="New Patient">New Patient</option>
+        <option value="Report Check">Report Check</option>
+        <option value="Follow Up">Follow Up</option>
+      </select>
       <input type="date" class="input" name="date" id="date" placeholder="dd-mm-yyyy">
       <input type="text" class="input" name="name" id="name" placeholder="Name">
       <input type="text" class="input" name="age" id="age" placeholder="Age">
       <input type="text" class="input" name="phone" id="phone" placeholder="Phone">
       <input type="text" class="input" name="address" id="address" placeholder="Address">
-      <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>" />
+      <input type="hidden" name="doc_id" id="doc_id" value="<?php echo $doc_id ?>">
       <input type="button" class="apnt_btn" id="apnt_btn" value="Submit">
     </div>
 
@@ -99,6 +150,7 @@ if (isset($_GET['doc_id'])) {
   $(document).ready(function() {
     var slot_id;
     $("input:checkbox").on('click', function() {
+      var app_type = $("#app_type").val();
       var $box = $(this);
       var slot = $(this).val();
       slot_id = slot;
@@ -113,6 +165,7 @@ if (isset($_GET['doc_id'])) {
           data: {
             type: "select",
             slot: slot,
+            app_type: app_type,
             doc_id: doc_id
           },
           cache: false,
@@ -133,11 +186,31 @@ if (isset($_GET['doc_id'])) {
         });
       } else {
         $box.prop("checked", false);
+        $.ajax({
+          url: "function.php",
+          type: "POST",
+          data: {
+            type: "uncheck",
+            slot: slot,
+            app_type: app_type,
+            doc_id: doc_id
+          },
+          cache: false,
+          success: function(dataResult) {
+            var dataResult = JSON.parse(dataResult);
+            if (dataResult.statusCode == 200) {
+              $("#success").show();
+              $("#error").hide();
+              $('#success').html('Slot ' + slot + ' Deselected');
+            }
+          }
+        });
       }
     });
 
 
     $("#apnt_btn").on("click", function() {
+      var app_type = $("#app_type").val();
       var date = $("#date").val();
       var name = $("#name").val();
       var age = $("#age").val();
@@ -145,12 +218,13 @@ if (isset($_GET['doc_id'])) {
       var address = $("#address").val();
       var doc_id = $('#doc_id').val();
 
-      if (date != "" && name != "" && slot_id != "") {
+      if (app_type != "" && date != "" && name != "" && slot_id != "") {
         $.ajax({
           url: "function.php",
           type: "POST",
           data: {
             type: "book",
+            app_type: app_type,
             slot: slot_id,
             date: date,
             name: name,
@@ -180,9 +254,25 @@ if (isset($_GET['doc_id'])) {
       } else {
         $("#error").show();
         $("#error").html("Please fill all the required feild !");
-        alert(slot_id);
       }
     });
 
+  });
+
+  var select = document.getElementById('app_type');
+  var slot = document.getElementById('New_patient');
+  var slot2 = document.getElementById('report_check');
+  slot2.style.visibility = 'hidden';
+  select.addEventListener('change', function handleChange(event) {
+    if (event.target.value === 'New Patient') {
+      slot.style.visibility = 'visible';
+      slot2.style.visibility = 'hidden';
+    } else if (event.target.value === 'Report Check') {
+      slot.style.visibility = 'hidden';
+      slot2.style.visibility = 'visible';
+    } else if (event.target.value === 'Follow Up') {
+      slot.style.visibility = 'visible';
+      slot2.style.visibility = 'hidden';
+    }
   });
 </script>

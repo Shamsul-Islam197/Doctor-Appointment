@@ -285,6 +285,64 @@
   font-weight: 600;
 }
 
+/* Search and Select Option */
+.select {
+  width: 150px;
+  background-color: #11101d;
+  border-radius: 5px 0 0 5px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+}
+.search {
+  margin-left: 25px;
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.date {
+  width: 200px;
+  border: 1px solid #11101d;
+  border-radius: 5px 0 0 5px;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #11101d;
+  border-right: none;
+  padding: 5px;
+  height: 36px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #11101d;
+}
+
+.searchTerm:focus {
+  color: #11101d;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #11101d;
+  background: #11101d;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap {
+  width: 30%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* card Design */
 .card_container {
   position: relative;
@@ -298,6 +356,12 @@
 .cards-list {
   z-index: 0;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.test_card {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -456,7 +520,21 @@ a {
 }
 
 /* Appointment Form */
+h3 {
+  position: absolute;
+}
 .slot-sec {
+  position: absolute;
+  margin-top: 25px;
+  width: 8%;
+  height: 500px;
+  float: left;
+  overflow-y: scroll;
+}
+
+.report_check {
+  position: absolute;
+  margin-top: 25px;
   width: 8%;
   height: 500px;
   float: left;
@@ -492,7 +570,7 @@ a {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-success {
+.success {
   width: 50%;
 }
 .checkbox {

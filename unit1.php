@@ -1,16 +1,15 @@
 <?php
 include 'connection.php';
 include 'log.php';
-$view = 0;
 $query = "SELECT * FROM department where branch_id like '%1%' ";
 $result = mysqli_query($con, $query);
 
-if (isset($_GET['department'])) {
-  $dept = $_GET['department'];
-  $query = "SELECT * FROM `doctor_info` where department='" . $dept . "'";
-  $result2 = mysqli_query($con, $query);
-  $view = 1;
+if (isset($_POST['search_btn'])) {
+  $search = $_POST['search'];
+  $query = "SELECT * FROM department where branch_id like '%1%' and dept_name like '%$search%' ";
+  $result = mysqli_query($con, $query);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,16 +37,24 @@ if (isset($_GET['department'])) {
     <div class="home-content">
       <i class='bx bx-menu'></i>
       <span class="text">Main Branch</span>
+
+      <form action="unit1.php" method="post">
+        <div class="search">
+          <input type="text" class="searchTerm" name="search" placeholder="Search Here">
+          <button type="submit" class="searchButton" name="search_btn">
+            <i class='bx bx-search bx-lg'></i>
+          </button>
+        </div>
     </div>
+    </form>
 
     <div class="card_container" id="dept_list">
       <div class="cards-list">
-
         <?php
         if (mysqli_num_rows($result) > 0) {
           while ($row = mysqli_fetch_array($result)) {
         ?>
-            <a href="unit1.php?department=<?php echo $row['dept_name'] ?>">
+            <a href="doctorview.php?department=<?php echo $row['dept_name'] ?>">
               <div class="card" id="show_doc">
                 <div class="card_image">
                   <?php echo '<img src="data:image;base64,' . base64_encode($row['img']) . '" >'; ?>
@@ -55,63 +62,9 @@ if (isset($_GET['department'])) {
                 <div class="card_title title-white">
                   <p><?php echo $row['dept_name']; ?></p>
                 </div>
-
               </div>
             </a>
-
         <?php
-          }
-        }
-        ?>
-      </div>
-    </div>
-
-
-    <div class="card_container" id="dept_doctor">
-      <div class="cards-list">
-
-        <?php
-        if ($view == 1) {
-          if (mysqli_num_rows($result2) > 0) {
-            while ($row = mysqli_fetch_array($result2)) {
-        ?>
-              <div class="card" data-toggle="modal" data-target="#myModal<?php echo $row['id'] ?>">
-                <div class="card_image">
-                  <?php echo '<img src="data:image;base64,' . base64_encode($row['img']) . '" >'; ?>
-                </div>
-                <div class="card_title_doctor title-white">
-                  <p><?php echo $row['name']; ?></p>
-                </div>
-
-              </div>
-              </a>
-
-              <div id="myModal<?php echo $row['id'] ?>" class="modal">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <div class="modal-body">
-                      <p>Name : <?php echo $row['name']; ?></p>
-                      <hr>
-                      <p>Designation : <?php echo $row['designation']; ?></p>
-                      <hr>
-                      <p>Degree : <?php echo $row['degree']; ?></p>
-                      <hr>
-                      <p>Institute : <?php echo $row['institute']; ?></p>
-                      <hr>
-                      <p>Schedule : <?php echo $row['chamber_day'] . " , " . $row['chamber_time']; ?></p>
-                      <hr>
-                      <p>Visit : <?php echo $row['first_visit'] . ", " . $row['second_visit'] . ", " . $row['report']; ?></p>
-                      <a class="apnt_btn" href="appointment.php?doc_id=<?php echo $row['id'] ?>">Book Appointment</a>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-        <?php
-            }
           }
         }
         ?>
@@ -122,17 +75,7 @@ if (isset($_GET['department'])) {
 </body>
 
 </html>
-
 <script>
-  if (('<?php echo $view; ?>') == 0) {
-    document.getElementById("dept_list").style.display = "block";
-    document.getElementById("dept_doctor").style.display = "none";
-
-  } else {
-    document.getElementById("dept_doctor").style.display = "block";
-    document.getElementById("dept_list").style.display = "none";
-  }
-
   $.get("nav.php", function(data) {
     $("#nav-placeholder").replaceWith(data);
   });
