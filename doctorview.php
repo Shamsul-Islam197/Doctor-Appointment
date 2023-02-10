@@ -110,7 +110,8 @@ if (isset($_POST['search_btn'])) {
                                         <p>Schedule : <?php echo $row['chamber_day'] . " , " . $row['chamber_time']; ?></p>
                                         <hr>
                                         <p>Visit : <?php echo $row['first_visit'] . ", " . $row['second_visit'] . ", " . $row['report']; ?></p>
-                                        <a class="apnt_btn" href="appointment.php?doc_id=<?php echo $row['id'] ?>">Book Appointment</a>
+                                        <input type="date" class="input" name="date" id="app_date" placeholder="dd-mm-yyyy">
+                                        <a class="apnt_btn" id="apnt_btn" href="appointment.php?doc_id=<?php echo $row['id'] ?>">Book Appointment</a>
 
                                     </div>
                                 </div>
@@ -132,5 +133,21 @@ if (isset($_POST['search_btn'])) {
 <script>
     $.get("nav.php", function(data) {
         $("#nav-placeholder").replaceWith(data);
+    });
+
+
+    $(document).ready(function() {
+        $("#apnt_btn").on("click", function() {
+            var app_date = $("#app_date").val();
+            $.ajax({
+                url: "function.php",
+                type: "POST",
+                data: {
+                    type: "apnt_date",
+                    app_date: app_date
+                },
+
+            });
+        });
     });
 </script>

@@ -526,7 +526,7 @@ h3 {
 .slot-sec {
   position: absolute;
   margin-top: 25px;
-  width: 8%;
+  width: 08%;
   height: 500px;
   float: left;
   overflow-y: scroll;
@@ -535,7 +535,7 @@ h3 {
 .report_check {
   position: absolute;
   margin-top: 25px;
-  width: 8%;
+  width: 08%;
   height: 500px;
   float: left;
   overflow-y: scroll;
@@ -617,4 +617,36 @@ h3 {
   text-align: center;
   margin-bottom: auto;
   width: 50%;
+}
+
+.table_div {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  width: 50%;
+  margin: 20px auto;
+}
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+table td {
+  padding: 15px;
+}
+table thead td {
+  background-color: #54585d;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 13px;
+  border: 1px solid #54585d;
+}
+table tbody td {
+  color: #636363;
+  border: 1px solid #dddfe1;
+}
+table tbody tr {
+  background-color: #f9fafb;
+}
+table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
 }
