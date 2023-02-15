@@ -130,7 +130,6 @@ if (isset($_GET['doc_id'])) {
       <select name="app_type" id="app_type" class="apnt_btn">
         <option value="New Patient">New Patient</option>
         <option value="Report Check">Report Check</option>
-        <option value="Follow Up">Follow Up</option>
       </select>
       <input type="text" class="input" name="name" id="name" placeholder="Name">
       <input type="text" class="input" name="age" id="age" placeholder="Age">
@@ -162,20 +161,21 @@ if (isset($_GET['doc_id'])) {
     </div>
 
 
-    <div class="table_div">
+    <div id="new_patient" class="table_div">
       <table>
         <thead>
           <tr>
             <th>Slot</th>
             <th>Name</th>
+            <th>Phone</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody id="table_result">
-
         </tbody>
       </table>
     </div>
+
 
   </section>
 </body>
@@ -218,7 +218,8 @@ if (isset($_GET['doc_id'])) {
             } else if (dataResult.statusCode == 201) {
               $("#success").hide();
               $("#error").show();
-              $('#slot_load').load(location.href + ' #slot_load');
+              $('#New_patient').load(location.href + ' #New_patient');
+              $('#report_check').load(location.href + ' #report_check');
               $('#error').html('Slot ' + slot + ' is not available !');
               $box.prop("checked", false);
             }
@@ -281,7 +282,9 @@ if (isset($_GET['doc_id'])) {
               $("#address").val("");
               $("#error").hide();
               $("#success").html("Appointment booked!");
-              $('#slot_load').load(location.href + ' #slot_load');
+              $('#New_patient').load(location.href + ' #New_patient');
+              $('#report_check').load(location.href + ' #report_check');
+              showdata();
             } else if (dataResult.statusCode == 201) {
               $("#error").show();
               $("#error").html("Something went wrong !");
@@ -296,36 +299,47 @@ if (isset($_GET['doc_id'])) {
 
   });
 
-  var app_type = $("#app_type").val();
 
-  $.ajax({
-    url: "function.php",
-    type: "POST",
-    data: {
-      type: "table",
-      app_type: app_type
-    },
-    cache: false,
-    success: function(data) {
-      $('#table_result').html(data);
-    }
-  });
+
+  function showdata() {
+    var app_type = $("#app_type").val();
+    $.ajax({
+      url: "function.php",
+      type: "POST",
+      data: {
+        type: "table",
+        app_type: app_type
+      },
+      cache: false,
+      success: function(data) {
+        $('#table_result').html(data);
+      }
+    });
+  }
+  showdata();
+
+
+
 
 
   var select = document.getElementById('app_type');
   var slot = document.getElementById('New_patient');
   var slot2 = document.getElementById('report_check');
+  var new_patient_table = document.getElementById('new_patient_table');
+  var report_table = document.getElementById('report_table');
   slot2.style.visibility = 'hidden';
   select.addEventListener('change', function handleChange(event) {
     if (event.target.value === 'New Patient') {
+      showdata();
       slot.style.visibility = 'visible';
       slot2.style.visibility = 'hidden';
+
     } else if (event.target.value === 'Report Check') {
+      showdata();
       slot.style.visibility = 'hidden';
       slot2.style.visibility = 'visible';
-    } else if (event.target.value === 'Follow Up') {
-      slot.style.visibility = 'visible';
-      slot2.style.visibility = 'hidden';
+
     }
+
   });
 </script>

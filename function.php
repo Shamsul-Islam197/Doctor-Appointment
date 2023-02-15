@@ -78,9 +78,9 @@ if (($_POST['type'] == "book")) {
 	$address = $_POST['address'];
 	$doc_id = $_POST['doc_id'];
 	if ($app_type == "Report Check") {
-		$query = "UPDATE `appointment_info` SET `slot_status` = 'booked' , `date` = '" . $date . "' , `patient_name` = '" . $name . "', `patient_age` = '" . $age . "', `appointment_type`= '" . $app_type . "' , `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE slot= '$slot' AND doc_id= '$doc_id'";
+		$query = "UPDATE `appointment_info` SET `slot_status` = 'booked' , `date` = '" . $date . "' , `patient_name` = '" . $name . "', `patient_age` = '" . $age . "' , `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE slot= '$slot' AND doc_id= '$doc_id' AND `date` = '$date' AND `appointment_type`= '$app_type' ";
 	} else {
-		$query = "UPDATE `appointment_info` SET `slot_status` = 'booked' , `date` = '" . $date . "' , `patient_name` = '" . $name . "', `patient_age` = '" . $age . "', `appointment_type`= '" . $app_type . "' , `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE slot= '$slot' AND doc_id= '$doc_id'";
+		$query = "UPDATE `appointment_info` SET `slot_status` = 'booked' , `date` = '" . $date . "' , `patient_name` = '" . $name . "', `patient_age` = '" . $age . "', `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE slot= '$slot' AND doc_id= '$doc_id' AND `date` = '$date' AND `appointment_type`= '$app_type'";
 	}
 	if (mysqli_query($con, $query)) {
 		echo json_encode(array("statusCode" => 200));
@@ -93,13 +93,14 @@ if (($_POST['type'] == "table")) {
 	$app_type = $_POST['app_type'];
 	$doc_id = $_SESSION['doc_id'];
 	$date = $_SESSION['apnt_date'];
-	$query = "SELECT slot,patient_name FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
+	$query = "SELECT slot,patient_name,patient_phone FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
 	$result = mysqli_query($con, $query);
 	while ($res = mysqli_fetch_array($result)) { ?>
 
 		<tr>
 			<td><?= $res['slot']; ?></td>
-			<td><?php echo $res['patient_name']; ?></td>
+			<td><?= $res['patient_name']; ?></td>
+			<td><?= $res['patient_phone']; ?></td>
 			<td>Action</td>
 		</tr>
 <?php
