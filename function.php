@@ -68,6 +68,7 @@ if (($_POST['type'] == "uncheck")) {
 	echo json_encode(array("statusCode" => 200));
 }
 
+
 if (($_POST['type'] == "book")) {
 	$app_type = $_POST['app_type'];
 	$slot = $_POST['slot'];
@@ -93,18 +94,25 @@ if (($_POST['type'] == "table")) {
 	$app_type = $_POST['app_type'];
 	$doc_id = $_SESSION['doc_id'];
 	$date = $_SESSION['apnt_date'];
-	$query = "SELECT slot,patient_name,patient_phone FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
+	$query = "SELECT id,slot,patient_name,patient_phone FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
 	$result = mysqli_query($con, $query);
 	while ($res = mysqli_fetch_array($result)) { ?>
 
-		<tr>
+		<tr id="delete<?= $res['id']; ?>">
 			<td><?= $res['slot']; ?></td>
 			<td><?= $res['patient_name']; ?></td>
 			<td><?= $res['patient_phone']; ?></td>
-			<td>Action</td>
+			<td><button onclick="editData(<?= $res['id']; ?>)">EDIT</button></td>
+			<td><button onclick="deleteData(<?= $res['id']; ?>)">DELETE</button></td>
 		</tr>
 <?php
 	}
+}
+
+if (($_POST['type'] == "delete")) {
+	$id = $_POST['delete_id'];
+	$query = "DELETE FROM appointment_info WHERE id='$id'";
+	$result = mysqli_query($con, $query);
 }
 
 

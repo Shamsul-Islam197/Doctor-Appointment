@@ -168,7 +168,7 @@ if (isset($_GET['doc_id'])) {
             <th>Slot</th>
             <th>Name</th>
             <th>Phone</th>
-            <th>Action</th>
+            <th colspan="2">Action</th>
           </tr>
         </thead>
         <tbody id="table_result">
@@ -187,117 +187,129 @@ if (isset($_GET['doc_id'])) {
     $("#nav-placeholder").replaceWith(data);
   });
 
-  $(document).ready(function() {
-    var slot_id;
-    $("input:checkbox").on('click', function() {
-      var app_type = $("#app_type").val();
-      var $box = $(this);
-      var slot = $(this).val();
-      slot_id = slot;
-      var doc_id = $('#doc_id').val();
-      if ($box.is(":checked")) {
-        var group = "input:checkbox[name='" + $box.attr("name") + "']";
-        $(group).prop("checked", false);
-        $box.prop("checked", true);
-        $.ajax({
-          url: "function.php",
-          type: "POST",
-          data: {
-            type: "select",
-            slot: slot,
-            app_type: app_type,
-            doc_id: doc_id
-          },
-          cache: false,
-          success: function(dataResult) {
-            var dataResult = JSON.parse(dataResult);
-            if (dataResult.statusCode == 200) {
-              $("#success").show();
-              $("#error").hide();
-              $('#success').html('Slot ' + slot + ' selected');
-            } else if (dataResult.statusCode == 201) {
-              $("#success").hide();
-              $("#error").show();
-              $('#New_patient').load(location.href + ' #New_patient');
-              $('#report_check').load(location.href + ' #report_check');
-              $('#error').html('Slot ' + slot + ' is not available !');
-              $box.prop("checked", false);
-            }
+
+  var slot_id;
+  var temp;
+  $(document).on('click', 'input[type=checkbox]', function() {
+    var app_type = $("#app_type").val();
+    var $box = $(this);
+    var slot = $(this).val();
+    slot_id = slot;
+    var doc_id = $('#doc_id').val();
+    if ($box.is(":checked")) {
+      var group = "input:checkbox[name='" + $box.attr("name") + "']";
+      $(group).prop("checked", false);
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: "uncheck",
+          slot: temp,
+          app_type: app_type,
+          doc_id: doc_id
+        }
+      });
+      $box.prop("checked", true);
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: "select",
+          slot: slot,
+          app_type: app_type,
+          doc_id: doc_id
+        },
+        cache: false,
+        success: function(dataResult) {
+          var dataResult = JSON.parse(dataResult);
+          if (dataResult.statusCode == 200) {
+            $("#success").show();
+            $("#error").hide();
+            $('#success').html('Slot ' + slot + ' selected');
+            temp = slot_id;
+          } else if (dataResult.statusCode == 201) {
+            $("#success").hide();
+            $("#error").show();
+            $('#New_patient').load(location.href + ' #New_patient');
+            $('#report_check').load(location.href + ' #report_check');
+            $('#error').html('Slot ' + slot + ' is not available !');
+            $box.prop("checked", false);
           }
-        });
-      } else {
-        $box.prop("checked", false);
-        $.ajax({
-          url: "function.php",
-          type: "POST",
-          data: {
-            type: "uncheck",
-            slot: slot,
-            app_type: app_type,
-            doc_id: doc_id
-          },
-          cache: false,
-          success: function(dataResult) {
-            var dataResult = JSON.parse(dataResult);
-            if (dataResult.statusCode == 200) {
-              $("#success").show();
-              $("#error").hide();
-              $('#success').html('Slot ' + slot + ' Deselected');
-            }
+        }
+      });
+    } else {
+      $box.prop("checked", false);
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: "uncheck",
+          slot: slot,
+          app_type: app_type,
+          doc_id: doc_id
+        },
+        cache: false,
+        success: function(dataResult) {
+          var dataResult = JSON.parse(dataResult);
+          if (dataResult.statusCode == 200) {
+            $("#success").show();
+            $("#error").hide();
+            $('#success').html('Slot ' + slot + ' Deselected');
           }
-        });
-      }
-    });
-
-
-    $("#apnt_btn").on("click", function() {
-      var app_type = $("#app_type").val();
-      var name = $("#name").val();
-      var age = $("#age").val();
-      var phone = $("#phone").val();
-      var address = $("#address").val();
-      var doc_id = $('#doc_id').val();
-
-      if (app_type != "" && name != "" && slot_id != "") {
-        $.ajax({
-          url: "function.php",
-          type: "POST",
-          data: {
-            type: "book",
-            app_type: app_type,
-            slot: slot_id,
-            name: name,
-            age: age,
-            phone: phone,
-            address: address,
-            doc_id: doc_id
-          },
-          cache: false,
-          success: function(dataResult) {
-            var dataResult = JSON.parse(dataResult);
-            if (dataResult.statusCode == 200) {
-              $("#name").val("");
-              $("#age").val("");
-              $("#phone").val("");
-              $("#address").val("");
-              $("#error").hide();
-              $("#success").html("Appointment booked!");
-              $('#New_patient').load(location.href + ' #New_patient');
-              $('#report_check').load(location.href + ' #report_check');
-              showdata();
-            } else if (dataResult.statusCode == 201) {
-              $("#error").show();
-              $("#error").html("Something went wrong !");
-            }
-          },
-        });
-      } else {
-        $("#error").show();
-        $("#error").html("Please fill all the required feild !");
-      }
-    });
-
+        }
+      });
+    }
   });
+
+
+  $("#apnt_btn").on("click", function() {
+    var app_type = $("#app_type").val();
+    var name = $("#name").val();
+    var age = $("#age").val();
+    var phone = $("#phone").val();
+    var address = $("#address").val();
+    var doc_id = $('#doc_id').val();
+
+    if (app_type != "" && name != "" && slot_id != "") {
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: "book",
+          app_type: app_type,
+          slot: slot_id,
+          name: name,
+          age: age,
+          phone: phone,
+          address: address,
+          doc_id: doc_id
+        },
+        cache: false,
+        success: function(dataResult) {
+          var dataResult = JSON.parse(dataResult);
+          if (dataResult.statusCode == 200) {
+            slot_id = "";
+            $("#name").val("");
+            $("#age").val("");
+            $("#phone").val("");
+            $("#address").val("");
+            $("#error").hide();
+            $("#success").html("Appointment booked!");
+            $('#New_patient').load(location.href + ' #New_patient');
+            $('#report_check').load(location.href + ' #report_check');
+            showdata();
+          } else if (dataResult.statusCode == 201) {
+            $("#error").show();
+            $("#error").html("Something went wrong !");
+          }
+        },
+      });
+    } else {
+      $("#error").show();
+      $("#error").html("Please fill all the required feild !");
+    }
+  });
+
 
 
 
@@ -317,6 +329,27 @@ if (isset($_GET['doc_id'])) {
     });
   }
   showdata();
+
+
+
+  function deleteData(id) {
+    if (confirm('are You sure?')) {
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: "delete",
+          delete_id: id
+        },
+        cache: false,
+        success: function(data) {
+          $('#delete' + id).hide('slow');
+          $('#New_patient').load(location.href + ' #New_patient');
+          $('#report_check').load(location.href + ' #report_check');
+        }
+      });
+    }
+  }
 
 
 
