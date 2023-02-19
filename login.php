@@ -6,7 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="script.js"></script>
   <link rel="stylesheet" href="login.CSS" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>User Log</title>
@@ -117,3 +116,122 @@
 </body>
 
 </html>
+
+<script>
+  $(document).ready(function() {
+    $("#loginShow").on("click", function() {
+      $("#loginForm").show();
+      $("#regForm").hide();
+      $("#error").hide();
+      $("#success").hide();
+    });
+    $("#regShow").on("click", function() {
+      $("#regForm").show();
+      $("#loginForm").hide();
+      $("#error").hide();
+      $("#success").hide();
+    });
+    $('#loginForm').keyup(function(e) {
+      if (e.keyCode == 13) {
+        login();
+      }
+    });
+    $('#regForm').keyup(function(e) {
+      if (e.keyCode == 13) {
+        reg();
+      }
+    });
+  });
+
+  $("#but_Signin").on("click", function() {
+    login();
+  });
+
+  $("#but_Signup").on("click", function() {
+    reg();
+  });
+
+
+  function reg() {
+    var name = $("#name").val();
+    var designation = $("#designation").val();
+    var phone = $("#phone").val();
+    var password = $("#password").val();
+    var confPass = $("#confPass").val();
+    var username = $("#username").val();
+
+    if (
+      name != "" &&
+      designation != "" &&
+      phone != "" &&
+      password != "" &&
+      confPass != "" &&
+      username != ""
+    ) {
+      if (password != confPass) {
+        alert("Password didn't match !");
+      } else {
+        $.ajax({
+          url: "function.php",
+          type: "POST",
+          data: {
+            type: 1,
+            name: name,
+            designation: designation,
+            phone: phone,
+            password: password,
+            username: username,
+          },
+          cache: false,
+          success: function(dataResult) {
+            var dataResult = JSON.parse(dataResult);
+            if (dataResult.statusCode == 200) {
+              $("#but_Signup").removeAttr("disabled");
+              $("#regForm").find("input:text").val("");
+              $("#regForm").find("input:password").val("");
+              $("#success").show();
+              $("#error").hide();
+              $("#success").html("Successfully registered!");
+            } else if (dataResult.statusCode == 201) {
+              $("#error").show();
+              $("#error").html("Username already exists !");
+            }
+          },
+        });
+      }
+    } else {
+      $("#error").show();
+      $("#error").html("Please fill all the required feild !");
+    }
+  }
+
+
+  function login() {
+    var username = $("#log_username").val();
+    var password = $("#log_Pass").val();
+    if (username != "" && password != "") {
+      $.ajax({
+        url: "function.php",
+        type: "POST",
+        data: {
+          type: 2,
+          username: username,
+          password: password,
+        },
+        cache: false,
+        success: function(dataResult) {
+          var dataResult = JSON.parse(dataResult);
+          if (dataResult.statusCode == 200) {
+            location.href = "index.php";
+          } else if (dataResult.statusCode == 201) {
+            $("#error").show();
+            $("#error").html("Invalid Username or Password !");
+          }
+        },
+      });
+    } else {
+      $("#error").show();
+      $("#error").html("Please fill all the required feild !");
+    }
+  }
+</script>

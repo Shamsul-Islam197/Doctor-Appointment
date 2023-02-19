@@ -3,7 +3,6 @@ include 'connection.php';
 include 'log.php';
 $apnt_date = $_SESSION['apnt_date'];
 
-
 if (isset($_GET['doc_id'])) {
   $_SESSION['doc_id'] = $_GET['doc_id'];
   $doc_id = $_GET['doc_id'];
@@ -13,7 +12,7 @@ if (isset($_GET['doc_id'])) {
     $n = $row['slot'];
     $m = $row['report_slot'];
   }
-  $query2 = "DELETE FROM appointment_info WHERE slot_status='selected' and `time` < (NOW() - INTERVAL 01 MINUTE)";
+  $query2 = "DELETE FROM appointment_info WHERE slot_status='selected' and `time` < (NOW() - INTERVAL 02 MINUTE)";
   mysqli_query($con, $query2);
 }
 ?>
@@ -122,8 +121,6 @@ if (isset($_GET['doc_id'])) {
       </div>
     </div>
 
-
-
     <div class="apnt_form">
       <div class="alert_success" id="success"></div>
       <div class="alert_danger" id="error"></div>
@@ -139,41 +136,42 @@ if (isset($_GET['doc_id'])) {
       <input type="button" class="apnt_btn" id="apnt_btn" value="Submit">
     </div>
 
-
-
-
-
-    <div class="modal fade" id="modelWindow" role="dialog">
-      <div class="modal-dialog modal-sm vertical-align-center">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Heading</h4>
-          </div>
-          <div class="modal-body">
-            Body text here
-          </div>
-          <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
     <div id="new_patient" class="table_div">
       <table>
         <thead>
           <tr>
             <th>Slot</th>
             <th>Name</th>
+            <th>Age</th>
             <th>Phone</th>
+            <th>Address</th>
             <th colspan="2">Action</th>
           </tr>
         </thead>
         <tbody id="table_result">
         </tbody>
       </table>
+    </div>
+
+    <div class="modal fade" id="mymodal" role="dialog">
+      <div class="modal-dialog modal-sm vertical-align-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Update</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <div class="modal_view">
+
+            <label>Name: <input type="text" class="input" name="name" id="modal_name" placeholder="Name"></label><br>
+            <label>Age: <input type="text" class="input" name="age" id="modal_age" placeholder="Age"></label><br>
+            <label> Phone: <input type="text" class="input" name="phone" id="modal_phone" placeholder="Phone"></label><br>
+            <label>Address: <input type="text" class="input" name="address" id="modal_address" placeholder="Address"></label>
+            <input type="button" class="apnt_btn" id="apnt_btn" value="Update">
+          </div>
+
+        </div>
+      </div>
     </div>
 
 
@@ -186,7 +184,6 @@ if (isset($_GET['doc_id'])) {
   $.get("nav.php", function(data) {
     $("#nav-placeholder").replaceWith(data);
   });
-
 
   var slot_id;
   var temp;
@@ -261,7 +258,6 @@ if (isset($_GET['doc_id'])) {
     }
   });
 
-
   $("#apnt_btn").on("click", function() {
     var app_type = $("#app_type").val();
     var name = $("#name").val();
@@ -310,9 +306,6 @@ if (isset($_GET['doc_id'])) {
     }
   });
 
-
-
-
   function showdata() {
     var app_type = $("#app_type").val();
     $.ajax({
@@ -330,8 +323,6 @@ if (isset($_GET['doc_id'])) {
   }
   showdata();
 
-
-
   function deleteData(id) {
     if (confirm('are You sure?')) {
       $.ajax({
@@ -343,17 +334,13 @@ if (isset($_GET['doc_id'])) {
         },
         cache: false,
         success: function(data) {
-          $('#delete' + id).hide('slow');
+          $('#id' + id).hide('slow');
           $('#New_patient').load(location.href + ' #New_patient');
           $('#report_check').load(location.href + ' #report_check');
         }
       });
     }
   }
-
-
-
-
 
   var select = document.getElementById('app_type');
   var slot = document.getElementById('New_patient');
@@ -371,8 +358,22 @@ if (isset($_GET['doc_id'])) {
       showdata();
       slot.style.visibility = 'hidden';
       slot2.style.visibility = 'visible';
-
     }
-
   });
+
+  $(document).ready(function() {
+    $(document).on('click', 'a[data-role=update]', function() {
+      var id = $(this).data('id');
+      var name = $('#' + id).children('td[data-target=name]').text();
+      var age = $('#' + id).children('td[data-target=age]').text();
+      var phone = $('#' + id).children('td[data-target=phone]').text();
+      var address = $('#' + id).children('td[data-target=address]').text();
+
+      $('#modal_name').val(name);
+      $('#modal_age').val(age);
+      $('#modal_phone').val(phone);
+      $('#modal_address').val(address);
+      $('#mymodal').modal('toggle');
+    })
+  })
 </script>

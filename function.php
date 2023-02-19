@@ -94,15 +94,17 @@ if (($_POST['type'] == "table")) {
 	$app_type = $_POST['app_type'];
 	$doc_id = $_SESSION['doc_id'];
 	$date = $_SESSION['apnt_date'];
-	$query = "SELECT id,slot,patient_name,patient_phone FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
+	$query = "SELECT id,slot,patient_name,patient_phone,patient_age,patient_address FROM appointment_info WHERE date='$date' AND doc_id='$doc_id' AND appointment_type='$app_type'";
 	$result = mysqli_query($con, $query);
 	while ($res = mysqli_fetch_array($result)) { ?>
 
-		<tr id="delete<?= $res['id']; ?>">
+		<tr id="<?= $res['id']; ?>">
 			<td><?= $res['slot']; ?></td>
-			<td><?= $res['patient_name']; ?></td>
-			<td><?= $res['patient_phone']; ?></td>
-			<td><button onclick="editData(<?= $res['id']; ?>)">EDIT</button></td>
+			<td data-target="name"><?= $res['patient_name']; ?></td>
+			<td data-target="age"><?= $res['patient_age']; ?></td>
+			<td data-target="phone"><?= $res['patient_phone']; ?></td>
+			<td data-target="address"><?= $res['patient_address']; ?></td>
+			<td><a href="#" data-role="update" data-id="<?= $res['id']; ?>">EDIT</a></button></td>
 			<td><button onclick="deleteData(<?= $res['id']; ?>)">DELETE</button></td>
 		</tr>
 <?php

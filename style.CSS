@@ -650,3 +650,16 @@ table tbody tr {
 table tbody tr:nth-child(odd) {
   background-color: #ffffff;
 }
+
+.modal_view {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  margin: 0 auto;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
+  border-radius: 10px;
+  width: 70%;
+  margin: 10px auto;
+}
