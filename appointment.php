@@ -157,17 +157,25 @@ if (isset($_GET['doc_id'])) {
       <div class="modal-dialog modal-sm vertical-align-center">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Update</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
 
           <div class="modal_view">
+            <h2>Data Update</h2>
+            <div class="alert_success" id="update_success"></div>
+            <label for="modal_name">Name</label>
+            <input type="text" name="modal_name" id="modal_name" placeholder="Name">
 
-            <label>Name: <input type="text" class="input" name="name" id="modal_name" placeholder="Name"></label><br>
-            <label>Age: <input type="text" class="input" name="age" id="modal_age" placeholder="Age"></label><br>
-            <label> Phone: <input type="text" class="input" name="phone" id="modal_phone" placeholder="Phone"></label><br>
-            <label>Address: <input type="text" class="input" name="address" id="modal_address" placeholder="Address"></label>
-            <input type="button" class="apnt_btn" id="apnt_btn" value="Update">
+            <label for="modal_age">Age</label>
+            <input type="text" name="modal_age" id="modal_age" placeholder="Age">
+
+            <label for="modal_phone">Phone</label>
+            <input type="text" name="modal_phone" id="modal_phone" placeholder="Phone">
+
+            <label for="modal_address">Address</label>
+            <textarea type="text" name="modal_address" id="modal_address" placeholder="Address"></textarea>
+
+            <button class="update_button" id="update_button">Update</button>
           </div>
 
         </div>
@@ -185,8 +193,9 @@ if (isset($_GET['doc_id'])) {
     $("#nav-placeholder").replaceWith(data);
   });
 
-  var slot_id;
-  var temp;
+  var slot_id, temp, id;
+
+
   $(document).on('click', 'input[type=checkbox]', function() {
     var app_type = $("#app_type").val();
     var $box = $(this);
@@ -342,6 +351,8 @@ if (isset($_GET['doc_id'])) {
     }
   }
 
+
+
   var select = document.getElementById('app_type');
   var slot = document.getElementById('New_patient');
   var slot2 = document.getElementById('report_check');
@@ -363,7 +374,7 @@ if (isset($_GET['doc_id'])) {
 
   $(document).ready(function() {
     $(document).on('click', 'a[data-role=update]', function() {
-      var id = $(this).data('id');
+      id = $(this).data('id');
       var name = $('#' + id).children('td[data-target=name]').text();
       var age = $('#' + id).children('td[data-target=age]').text();
       var phone = $('#' + id).children('td[data-target=phone]').text();
@@ -375,5 +386,31 @@ if (isset($_GET['doc_id'])) {
       $('#modal_address').val(address);
       $('#mymodal').modal('toggle');
     })
+  })
+
+  $("#update_button").on("click", function() {
+    var name = $("#modal_name").val();
+    var age = $("#modal_age").val();
+    var phone = $("#modal_phone").val();
+    var address = $("#modal_address").val();
+    $.ajax({
+      url: "function.php",
+      type: "POST",
+      data: {
+        type: "update",
+        update_id: id,
+        name: name,
+        age: age,
+        phone: phone,
+        address: address
+      },
+      cache: false,
+      success: function(data) {
+        showdata();
+        $("#mymodal").fadeOut();
+      }
+    });
+
+
   })
 </script>

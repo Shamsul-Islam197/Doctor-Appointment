@@ -117,6 +117,17 @@ if (($_POST['type'] == "delete")) {
 	$result = mysqli_query($con, $query);
 }
 
+if (($_POST['type'] == "update")) {
+	$id = $_POST['update_id'];
+	$name = $_POST['name'];
+	$age = $_POST['age'];
+	$phone = $_POST['phone'];
+	$address = $_POST['address'];
+	$query = "UPDATE `appointment_info` SET  `patient_name` = '" . $name . "', `patient_age` = '" . $age . "' , `patient_phone` = '" . $phone . "' , `patient_address` = '" . $address . "' WHERE id= '$id' ";
+	$result = mysqli_query($con, $query);
+	echo json_encode(array("statusCode" => 200));
+}
+
 
 
 
